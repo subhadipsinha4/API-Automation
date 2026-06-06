@@ -1,8 +1,10 @@
 package api;
 
 import io.restassured.response.Response;
+import model.HttpBinRequest;
 import model.Pice_RequestBody;
 import model.RequestBody;
+import model.reqresRequestBody;
 import speces.RequestSpecs;
 
 import static io.restassured.RestAssured.given;
@@ -41,7 +43,7 @@ public class jsAPI {
         piceRequestBody.setCampaignSource(campaignSource);
 
         return given()
-                .spec(RequestSpecs.getRequestSpecPice())
+                .spec(RequestSpecs.getRequestSpec())
                 .log().all()
                 .header("device-id","uuid")
                 .header("country-code","IN")
@@ -51,4 +53,34 @@ public class jsAPI {
                 .when()
                 .post("/vk/v1/login/otp");
     }
+
+    public static Response getPiceOTP(){
+        return given().
+                spec(RequestSpecs.getPiceAPI())
+                .log().all()
+                .queryParam("countryCode","91")
+                .queryParam("number","9547572748")
+                .when()
+                .get("/vk/v1/otp");
+    }
+
+    public static Response getReqresAPI(reqresRequestBody rb){
+        return given()
+                .spec(RequestSpecs.getReqresAPI())
+                .log().all()
+                .header("x-api-key","reqres-free-v1")
+                .body(rb)
+                .when()
+                .post("/api/users");
+    }
+
+    public static Response getHttpBin(HttpBinRequest hb){
+        return given()
+                .spec(RequestSpecs.getHttpBin())
+                .log().all()
+                .body(hb)
+                .when()
+                .post("/post");
+    }
+
 }
